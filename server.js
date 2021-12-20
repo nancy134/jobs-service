@@ -31,10 +31,30 @@ app.get('/expireMailPreview', (req, res) => {
         if (s3Err){
             res.send(s3Err);
         } else {
-            res.send(s3Data);
+            var toDeleteList = [];
+            for (var i=0; i<s3Data.MaxKeys; i++){
+                var toDelete = {
+                    Key: s3Data.Contents[i].Key
+                };
+                toDeleteList.push(toDelete);
+            }
+            var deleteParams = {
+                Bucket: process.env.S3_BUCKET_MAIL_TEMPLATES,
+                Delete: {
+                    Objects: toDeleteList
+                }
+            }
+            s3.deleteObjects(deleteParams, function(s3DeleteErr, s3DeleteData){
+                if (s3DeleteErr){
+                    res.send(s3DeleteErr);
+                } else {
+                    res.send(s3DeleteData);
+                }
+            });
         }
     });
 
 });
+
 
 app.listen(PORT, HOST);
