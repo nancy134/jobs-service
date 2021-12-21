@@ -56,5 +56,19 @@ app.get('/expireMailPreview', (req, res) => {
 
 });
 
+app.get('/syncUsers', (req, res) => {
+    res.send("syncUsers");
+});
+
+app.get('/playUsers', (req, res) => {
+    res.send("playUsers");
+});
+
+app.get('/playBillingEvents', (req, res) => {
+    res.send("playBillingEvents");
+});
+
+
+
 
 app.listen(PORT, HOST);
