@@ -13,6 +13,12 @@ const s3 = new aws.S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
+const utilities = require('./utilities');
+
+const sparkService = require('./spark');
+
+const constantService = require('./constant');
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use(cors());
@@ -68,6 +74,25 @@ app.get('/playBillingEvents', (req, res) => {
     res.send("playBillingEvents");
 });
 
+
+app.post('/cc/syncContacts', (req, res) => {
+    token = utilities.getToken(req);
+    constantService.getContacts(token).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        res.send(err);
+    });
+});
+
+
+app.post('/spark/syncContacts', (req, res) => {
+    token = utilities.getToken(req);
+    sparkService.getContacts(token).then(function(result){
+        res.send(result);
+    }).catch(function(err){
+        res.send(err);
+    });
+});
 
 
 
