@@ -78,22 +78,42 @@ app.get('/playBillingEvents', (req, res) => {
 app.post('/cc/syncContacts', (req, res) => {
     token = utilities.getToken(req);
     constantService.getContacts(token).then(function(result){
-        res.send(result);
+        var contacts = result.contacts;
+        var length = contacts.length;
+        var toSync = [];
+        for (var i=0; i<length; i++){
+            var contact = {
+                email: contacts[i].email_address.address,
+                first: contacts[i].first_name,
+                last: contacts[i].last_name
+            };
+            toSync.push(contact);
+        }
+        res.send(toSync);
     }).catch(function(err){
+        console.log(err);
         res.send(err);
     });
 });
-
 
 app.post('/spark/syncContacts', (req, res) => {
     token = utilities.getToken(req);
     sparkService.getContacts(token).then(function(result){
-        res.send(result);
+        var contacts = result.D.Results;
+        var length = contacts.length;
+        var toSync = [];
+        for (var i=0; i<length; i++){
+            var contact = {
+                email: contacts[i].PrimaryEmail,
+                first: contacts[i].GivenName,
+                last: contacts[i].FamilyName
+            };
+            toSync.push(contact);
+        }
+        res.send(toSync);
     }).catch(function(err){
         res.send(err);
     });
 });
-
-
 
 app.listen(PORT, HOST);
