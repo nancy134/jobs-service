@@ -10,6 +10,7 @@ const app = express();
 const aws = require("aws-sdk");
 const snsService = require('./sns');
 
+//const sqsService = require('./sqs');
 
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
