@@ -8,6 +8,9 @@ const HOST = '0.0.0.0';
 const app = express();
 
 const aws = require("aws-sdk");
+const snsService = require('./sns');
+
+
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -78,23 +81,14 @@ app.get('/playBillingEvents', (req, res) => {
 app.post('/cc/syncContacts', (req, res) => {
     token = utilities.getToken(req);
     constantService.getContacts(token).then(function(result){
-        var contacts = result.contacts;
-        var length = contacts.length;
-        var toSync = [];
-        for (var i=0; i<length; i++){
-            var contact = {
-                email: contacts[i].email_address.address,
-                first: contacts[i].first_name,
-                last: contacts[i].last_name
-            };
-            toSync.push(contact);
-        }
-        res.send(toSync);
+        snsService.syncCCContacts(result);
+        res.send(result);
     }).catch(function(err){
         console.log(err);
         res.send(err);
     });
 });
+
 
 app.post('/spark/syncContacts', (req, res) => {
     token = utilities.getToken(req);

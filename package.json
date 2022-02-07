@@ -12,6 +12,6 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
-    "aws-sdk": "^2.1031.0"
+    "aws-sdk": "^2.1069.0"
   }
 }
