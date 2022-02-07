@@ -105,8 +105,11 @@ app.post('/spark/syncContacts', (req, res) => {
             };
             toSync.push(contact);
         }
+        snsService.syncSparkContacts(toSync);
         res.send(toSync);
+
     }).catch(function(err){
+        console.log(err);
         res.send(err);
     });
 });
