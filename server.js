@@ -82,14 +82,24 @@ app.get('/playBillingEvents', (req, res) => {
 app.post('/cc/syncContacts', (req, res) => {
     token = utilities.getToken(req);
     constantService.getContacts(token).then(function(result){
-        snsService.syncCCContacts(result);
-        res.send(result);
+        var toSync = [];
+        for (var i=0; i<result.contacts.length; i++){
+            var c = result.contacts[i];
+            var contact = {
+                token: token,
+                email: c.email_address.address,
+                first: c.first_name,
+                last: c.last_name
+            }
+            toSync.push(contact);
+        }
+        snsService.syncCCContacts(toSync);
+        res.send(toSync);
     }).catch(function(err){
         console.log(err);
         res.send(err);
     });
 });
-
 
 app.post('/spark/syncContacts', (req, res) => {
     token = utilities.getToken(req);
@@ -99,6 +109,7 @@ app.post('/spark/syncContacts', (req, res) => {
         var toSync = [];
         for (var i=0; i<length; i++){
             var contact = {
+                token: token,
                 email: contacts[i].PrimaryEmail,
                 first: contacts[i].GivenName,
                 last: contacts[i].FamilyName
