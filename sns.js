@@ -10,7 +10,7 @@ exports.syncCCContacts = function(contacts){
         var c = contacts[i];
 
         var data = {
-            token: token,
+            token: c.token,
             email: c.email,
             first: c.first,
             last: c.last
@@ -35,7 +35,7 @@ exports.syncCCContacts = function(contacts){
         console.log(c.email);
 
         var data = {
-            token: token,
+            token: c.token,
             email: c.email,
             first: c.first,
             last: c.last

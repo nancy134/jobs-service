@@ -86,7 +86,7 @@ app.post('/cc/syncContacts', (req, res) => {
         for (var i=0; i<result.contacts.length; i++){
             var c = result.contacts[i];
             var contact = {
-                token: token,
+                token: req.body.spark_access_token,
                 email: c.email_address.address,
                 first: c.first_name,
                 last: c.last_name
@@ -109,7 +109,7 @@ app.post('/spark/syncContacts', (req, res) => {
         var toSync = [];
         for (var i=0; i<length; i++){
             var contact = {
-                token: token,
+                token: req.body.cc_access_token,
                 email: contacts[i].PrimaryEmail,
                 first: contacts[i].GivenName,
                 last: contacts[i].FamilyName
