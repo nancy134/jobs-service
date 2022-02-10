@@ -8,11 +8,14 @@ const syncSparkContactTopicARN = process.env.AWS_SNS_SYNC_SPARK_CONTACT_TOPIC
 exports.syncCCContacts = function(contacts){
     for (var i=0; i<contacts.length; i++){
         var c = contacts[i];
+
         var data = {
+            token: token,
             email: c.email,
             first: c.first,
             last: c.last
         }
+
         var params = {
             Message: JSON.stringify(data),
             TopicArn: syncContactTopicARN
@@ -30,9 +33,14 @@ exports.syncCCContacts = function(contacts){
     for (var i=0; i<contacts.length; i++){
         var c = contacts[i];
         console.log(c.email);
+
         var data = {
-            email: c.email
+            token: token,
+            email: c.email,
+            first: c.first,
+            last: c.last
         }
+
         var params = {
             Message: JSON.stringify(data),
             TopicArn: syncSparkContactTopicARN
