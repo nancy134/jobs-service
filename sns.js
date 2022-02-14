@@ -38,7 +38,9 @@ exports.syncCCContacts = function(contacts){
             token: c.token,
             email: c.email,
             first: c.first,
-            last: c.last
+            last: c.last,
+            sparkId: c.sparkId
+
         }
 
         var params = {

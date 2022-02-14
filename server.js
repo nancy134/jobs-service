@@ -112,8 +112,8 @@ app.post('/spark/syncContacts', (req, res) => {
                 token: req.body.cc_access_token,
                 email: contacts[i].PrimaryEmail,
                 first: contacts[i].GivenName,
-                last: contacts[i].FamilyName
-            };
+                last: contacts[i].FamilyName,
+                sparkId: contacts[i].Id            };
             toSync.push(contact);
         }
         snsService.syncSparkContacts(toSync);
