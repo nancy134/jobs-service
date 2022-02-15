@@ -103,22 +103,29 @@ app.post('/cc/syncContacts', (req, res) => {
 
 app.post('/spark/syncContacts', (req, res) => {
     token = utilities.getToken(req);
-    sparkService.getContacts(token).then(function(result){
-        var contacts = result.D.Results;
-        var length = contacts.length;
-        var toSync = [];
-        for (var i=0; i<length; i++){
-            var contact = {
-                token: req.body.cc_access_token,
-                email: contacts[i].PrimaryEmail,
-                first: contacts[i].GivenName,
-                last: contacts[i].FamilyName,
-                sparkId: contacts[i].Id            };
-            toSync.push(contact);
-        }
-        snsService.syncSparkContacts(toSync);
-        res.send(toSync);
+    constantService.findOrCreateCustomField(token).then(function(customField){
 
+        console.log(customField);
+        sparkService.getContacts(token).then(function(result){
+            var contacts = result.D.Results;
+            var length = contacts.length;
+            var toSync = [];
+            for (var i=0; i<length; i++){
+                var contact = {
+                    token: req.body.cc_access_token,
+                    email: contacts[i].PrimaryEmail,
+                    first: contacts[i].GivenName,
+                    last: contacts[i].FamilyName,
+                    sparkId: contacts[i].Id            };
+                toSync.push(contact);
+            }
+            snsService.syncSparkContacts(toSync);
+            res.send(toSync);
+
+        }).catch(function(err){
+            console.log(err);
+            res.send(err);
+        });
     }).catch(function(err){
         console.log(err);
         res.send(err);

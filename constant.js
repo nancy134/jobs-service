@@ -56,3 +56,22 @@ exports.createCustomField = function(accessToken){
         });
     });
 }   
+
+exports.findOrCreateCustomField = function(accessToken){
+    return new Promise(function(resolve, reject){
+        exports.getCustomField(accessToken).then(function(customField){
+            if (customField.name === "flexmls_id"){
+                resolve(customField);
+            } else {
+                exports.createCustomField(accessToken).then(function(newCustomField){
+                    resolve(newCustomField);
+                }).catch(function(err){
+                    reject(utilities.processAxiosError(err));
+                });
+            }
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
+
