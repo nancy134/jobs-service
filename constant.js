@@ -34,3 +34,25 @@ exports.getCustomField = function(accessToken){
         });
     });
 }
+
+exports.createCustomField = function(accessToken){
+    return new Promise(function(resolve, reject){
+        url = process.env.CONSTANT_SERVICE + "/contact_custom_fields";
+        var headers = utilities.createConstantHeaders(accessToken);
+        var body = {
+            label: "flexmls_id",
+            type: "string"
+        };
+        var options = {
+            url: url,
+            method: 'POST',
+            headers: headers,
+            data: body
+        }
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}   
