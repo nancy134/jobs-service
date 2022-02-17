@@ -103,9 +103,10 @@ app.post('/cc/syncContacts', (req, res) => {
 
 app.post('/spark/syncContacts', (req, res) => {
     token = utilities.getToken(req);
-    constantService.findOrCreateCustomField(token).then(function(customField){
+    constantService.findOrCreateCustomField(req.body.cc_access_token).then(function(customField){
 
-        console.log(customField);
+        //console.log("customField:");
+        //console.log(customField);
         sparkService.getContacts(token).then(function(result){
             var contacts = result.D.Results;
             var length = contacts.length;
@@ -123,13 +124,14 @@ app.post('/spark/syncContacts', (req, res) => {
             res.send(toSync);
 
         }).catch(function(err){
-            console.log(err);
+            //console.log("error getting contacts");
             res.send(err);
         });
     }).catch(function(err){
-        console.log(err);
+        //console.log("error finding custom field");
         res.send(err);
     });
 });
+
 
 app.listen(PORT, HOST);

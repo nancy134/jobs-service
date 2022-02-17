@@ -28,8 +28,11 @@ exports.getCustomField = function(accessToken){
             headers: headers
         }
         axios(options).then(function(result){
+            //console.log("get customField result.data:");
+            //console.log(result.data);
             resolve(result.data);
         }).catch(function(err){
+            console.log(err);
             reject(utilities.processAxiosError(err));
         });
     });
@@ -60,9 +63,11 @@ exports.createCustomField = function(accessToken){
 exports.findOrCreateCustomField = function(accessToken){
     return new Promise(function(resolve, reject){
         exports.getCustomField(accessToken).then(function(customField){
-            if (customField.name === "flexmls_id"){
+            //console.log(customField);
+            if (customField && customField.name === "flexmls_id"){
                 resolve(customField);
             } else {
+                //console.log("create new custom field");
                 exports.createCustomField(accessToken).then(function(newCustomField){
                     resolve(newCustomField);
                 }).catch(function(err){
