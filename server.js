@@ -92,7 +92,7 @@ app.post('/cc/syncContacts', (req, res) => {
                 first: contacts[i].GivenName,
                 last: contacts[i].FamilyName,
                 sparkId: contacts[i].Id,
-                customFieldId: customField.custom_field_id                    
+  
             };
 
             toSync.push(contact);
@@ -121,7 +121,9 @@ app.post('/spark/syncContacts', (req, res) => {
                     email: contacts[i].PrimaryEmail,
                     first: contacts[i].GivenName,
                     last: contacts[i].FamilyName,
-                    sparkId: contacts[i].Id            };
+                    sparkId: contacts[i].Id,
+                    customFieldId: customField.custom_field_id
+                };
                 toSync.push(contact);
             }
             snsService.syncSparkContacts(toSync);
