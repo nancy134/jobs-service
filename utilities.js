@@ -89,3 +89,21 @@ exports.getCCSyncData = function(accessToken, contacts){
     }
     return toSync;
 }
+exports.getSparkSyncData = function(accessToken, customField, contacts){
+
+    var length = contacts.length;
+    var toSync = [];
+    for (var i=0; i<length; i++){
+        var contact = {
+            token: accessToken,
+            email: contacts[i].PrimaryEmail,
+            first: contacts[i].GivenName,
+            last: contacts[i].FamilyName,
+            sparkId: contacts[i].Id,
+            customFieldId: customField.custom_field_id
+        };
+        toSync.push(contact);
+    }
+    return toSync;    
+}
+

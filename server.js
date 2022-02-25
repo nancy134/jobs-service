@@ -95,33 +95,17 @@ app.post('/cc/syncContacts', (req, res) => {
 app.post('/spark/syncContacts', (req, res) => {
     token = utilities.getToken(req);
     constantService.findOrCreateCustomField(req.body.cc_access_token).then(function(customField){
+         sparkService.getContacts(token).then(function(result){
+             
+            var toSync = utilities.getSparkSyncData(req.body.cc_access_token, customField, result.D.Results);
 
-        //console.log("customField:");
-        //console.log(customField);
-        sparkService.getContacts(token).then(function(result){
-            var contacts = result.D.Results;
-            var length = contacts.length;
-            var toSync = [];
-            for (var i=0; i<length; i++){
-                var contact = {
-                    token: req.body.cc_access_token,
-                    email: contacts[i].PrimaryEmail,
-                    first: contacts[i].GivenName,
-                    last: contacts[i].FamilyName,
-                    sparkId: contacts[i].Id,
-                    customFieldId: customField.custom_field_id
-                };
-                toSync.push(contact);
-            }
             snsService.syncSparkContacts(toSync);
             res.send(toSync);
 
         }).catch(function(err){
-            //console.log("error getting contacts");
             res.send(err);
         });
     }).catch(function(err){
-        //console.log("error finding custom field");
         res.send(err);
     });
 });
