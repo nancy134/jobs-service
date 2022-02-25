@@ -98,7 +98,24 @@ exports.getSparkSyncData = function(accessToken, customField, contacts){
             token: accessToken,
             email: contacts[i].PrimaryEmail,
             first: contacts[i].GivenName,
+            middle: contacts[i].MiddleName,
             last: contacts[i].FamilyName,
+            phone_work: contacts[i].WorkPhoneNumber,
+            phone_mobile: contacts[i].MobilePhoneNumber,
+            phone_other: contacts[i].OtherPhoneNumber,
+            phone_home: contacts[i].HomePhoneNumber,
+            phone_primary: contacts[i].PrimaryPhoneNumber,
+            phone_pager: contacts[i].PagerPhoneNumber,
+
+            address_home_street: contacts[i].HomeStreetAddress,
+            address_home_city: contacts[i].HomeLocality,
+            address_home_state: contacts[i].HomeRegion,
+            address_home_zip: contacts[i].HomePostalCode,
+            address_work_street: contacts[i].WorkStreetAddress,
+            address_work_city: contacts[i].WorkLocality,
+            address_work_state: contacts[i].WorkRegion,
+            address_work_zip: contacts[i].WorkPostalCode,
+            
             sparkId: contacts[i].Id,
             customFieldId: customField.custom_field_id
         };
