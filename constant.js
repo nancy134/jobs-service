@@ -3,7 +3,9 @@ const utilities = require('./utilities');
 
 exports.getContacts = function(accessToken){
     return new Promise(function(resolve, reject){
-        url = process.env.CONSTANT_SERVICE + "/contacts";
+        
+        url = process.env.CONSTANT_SERVICE + "/contacts?limit=5"; 
+
         var headers = utilities.createConstantHeaders(accessToken);
         var options = {
             url: url,

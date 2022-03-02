@@ -9,6 +9,7 @@ const app = express();
 
 const aws = require("aws-sdk");
 const snsService = require('./sns');
+const url = require('url');
 
 //const sqsService = require('./sqs');
 
@@ -80,8 +81,13 @@ app.get('/playBillingEvents', (req, res) => {
 
 
 app.post('/cc/syncContacts', (req, res) => {
+    var urlParts  = url.parse(req.url);
+    var queryStr = urlParts.query;
     token = utilities.getToken(req);
     constantService.getContacts(token).then(function(result){
+        if (result._links){
+            console.log(result._links.next.href);
+        }
         var toSync = utilities.getCCSyncData(req.body.spark_access_token, result.contacts);
         snsService.syncCCContacts(toSync);
         res.send(toSync);
