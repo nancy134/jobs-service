@@ -112,7 +112,9 @@ app.post('/cc/syncContacts', (req, res) => {
 app.post('/spark/syncContacts', (req, res) => {
     token = utilities.getToken(req);
     constantService.findOrCreateCustomField(req.body.cc_access_token).then(function(customField){
-         sparkService.getContacts(token).then(function(result){
+ 
+        var page = 1;
+        sparkService.getContacts(token, page).then(function(result){
              
             var toSync = utilities.getSparkSyncData(req.body.cc_access_token, customField, result.D.Results);
 

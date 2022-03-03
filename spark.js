@@ -1,9 +1,13 @@
 const axios = require('axios');
 const utilities = require('./utilities');
 
-exports.getContacts = function(accessToken){
+exports.getContacts = function(accessToken, page){
     return new Promise(function(resolve, reject){
         var url = process.env.SPARK_SERVICE + "/contacts";
+        if (page){
+            url += "?page="+page;
+        }
+
         var headers = utilities.createSparkHeaders(accessToken);
         var options = {
             url: url,
