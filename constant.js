@@ -1,10 +1,12 @@
 const axios = require('axios');
 const utilities = require('./utilities');
 
-exports.getContacts = function(accessToken){
+exports.getContacts = function(accessToken, query){
+
     return new Promise(function(resolve, reject){
         
-        url = process.env.CONSTANT_SERVICE + "/contacts?limit=5"; 
+        url = process.env.CONSTANT_SERVICE + "/contacts";
+        if (query) url += "?" + query;
 
         var headers = utilities.createConstantHeaders(accessToken);
         var options = {

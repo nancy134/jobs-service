@@ -84,13 +84,24 @@ app.post('/cc/syncContacts', (req, res) => {
     var urlParts  = url.parse(req.url);
     var queryStr = urlParts.query;
     token = utilities.getToken(req);
-    constantService.getContacts(token).then(function(result){
-        if (result._links){
-            console.log(result._links.next.href);
+    constantService.getContacts(token, queryStr).then(function(result){
+        console.log(result);
+        var toSync = null;
+        if (result._links && result._links.next){
+            var href = result._links.next.href;
+            var parts = href.split("?");
+            if (parts.length > 1) queryStr = parts[1];
+            constantService.getContacts(token, queryStr).then(function(result2){
+                toSync = utilities.getCCSyncData(req.body.spark_access_token, result2.contacts);
+                snsService.syncCCContacts(toSync);
+
+            }).catch(function(err){
+                console.log(err);
+            });
         }
-        var toSync = utilities.getCCSyncData(req.body.spark_access_token, result.contacts);
+        toSync = utilities.getCCSyncData(req.body.spark_access_token, result.contacts);
         snsService.syncCCContacts(toSync);
-        res.send(toSync);
+        res.send("sync started");
     }).catch(function(err){
         console.log(err);
         res.send(err);
