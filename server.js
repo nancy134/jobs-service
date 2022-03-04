@@ -112,15 +112,21 @@ app.post('/cc/syncContacts', (req, res) => {
 app.post('/spark/syncContacts', (req, res) => {
     token = utilities.getToken(req);
     constantService.findOrCreateCustomField(req.body.cc_access_token).then(function(customField){
- 
-        var page = 1;
-        sparkService.getContacts(token, page).then(function(result){
-             
-            var toSync = utilities.getSparkSyncData(req.body.cc_access_token, customField, result.D.Results);
-
+         var page = 1;
+         sparkService.getContacts(token, null, page).then(function(result){
+            var toSync = null;
+            if (page && result.D.Pagination && result.D.Pagination.CurrentPage < page){
+                ++page;
+                sparkService.getContacts(token, null, page).then(function(result2){
+                    toSync = utilities.getSparkSyncData(req.body.cc_access_token, customField, result2.D.Results);
+                    snsService.syncSparkContacts(toSync);
+                }).catch(function(err){
+                    console.log(err);
+                });
+            }
+            toSync = utilities.getSparkSyncData(req.body.cc_access_token, customField, result.D.Results);
             snsService.syncSparkContacts(toSync);
             res.send(toSync);
-
         }).catch(function(err){
             res.send(err);
         });
@@ -128,6 +134,5 @@ app.post('/spark/syncContacts', (req, res) => {
         res.send(err);
     });
 });
-
 
 app.listen(PORT, HOST);
