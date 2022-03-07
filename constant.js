@@ -90,6 +90,7 @@ exports.syncContacts = function(accessToken, query){
     return new Promise(function(resolve, reject){
         url = process.env.JOBS_SERVICE + "/cc/syncContacts";
         if (query) url += "?" + query;
+        console.log(url);
 
         var headers = utilities.createConstantHeaders(accessToken);
         var options = {

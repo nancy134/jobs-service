@@ -96,14 +96,14 @@ app.post('/cc/syncContacts', (req, res) => {
                 //snsService.syncCCContacts(toSync);
 
             }).catch(function(err){
-                console.log(err);
+                console.log("err1");
             });
         }
         //toSync = utilities.getCCSyncData(req.body.spark_access_token, result.contacts);
         //snsService.syncCCContacts(toSync);
         res.send("sync started");
     }).catch(function(err){
-        console.log(err);
+        console.log("err2");
         res.send(err);
     });
 });
