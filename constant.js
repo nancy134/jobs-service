@@ -84,3 +84,23 @@ exports.findOrCreateCustomField = function(accessToken){
     });
 }
 
+
+exports.syncContacts = function(accessToken, query){
+
+    return new Promise(function(resolve, reject){
+        url = process.env.JOBS_SERVICE + "/cc/syncContacts";
+        if (query) url += "?" + query;
+
+        var headers = utilities.createConstantHeaders(accessToken);
+        var options = {
+            url: url,
+            method: 'GET',
+            headers: headers
+        }
+        axios(options).then(function(result){
+            resolve(result.data);
+        }).catch(function(err){
+            reject(utilities.processAxiosError(err));
+        });
+    });
+}
