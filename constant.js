@@ -2,25 +2,33 @@ const axios = require('axios');
 const utilities = require('./utilities');
 
 exports.getContacts = function(accessToken, query){
+    url = process.env.CONSTANT_SERVICE + "/contacts";
+    if (query) url += "?" + query;
 
-    return new Promise(function(resolve, reject){
-        
-        url = process.env.CONSTANT_SERVICE + "/contacts";
-        if (query) url += "?" + query;
+    var headers = utilities.createConstantHeaders(accessToken);
+    var options = {
+        url: url,
+        method: 'GET',
+        headers: headers
+    }
+    axios(options).then(function(result){
+        if (result.data._links && result.data._links.next){
+            var href = result.data._links.next.href;
+            var parts = href.split("?");
+            if (parts.length > 1) queryStr = parts[1];
+            console.log(queryStr);
+            exports.getContacts(accessToken, queryStr);
 
-        var headers = utilities.createConstantHeaders(accessToken);
-        var options = {
-            url: url,
-            method: 'GET',
-            headers: headers
+        } else {
+            
+            console.log(result.data);
         }
-        axios(options).then(function(result){
-            resolve(result.data);
-        }).catch(function(err){
-            reject(utilities.processAxiosError(err));
-        });
+
+    }).catch(function(err){
+        console.log(utilities.processAxiosError(err));
     });
 }
+
 
 exports.getCustomField = function(accessToken){
     return new Promise(function(resolve, reject){
@@ -85,7 +93,7 @@ exports.findOrCreateCustomField = function(accessToken){
 }
 
 
-exports.syncContacts = function(accessToken, query){
+exports.syncContacts = function(accessToken, query, data){
 
     return new Promise(function(resolve, reject){
         url = process.env.JOBS_SERVICE + "/cc/syncContacts";
@@ -95,8 +103,9 @@ exports.syncContacts = function(accessToken, query){
         var headers = utilities.createConstantHeaders(accessToken);
         var options = {
             url: url,
-            method: 'GET',
-            headers: headers
+            method: 'POST',
+            headers: headers,
+            data: data
         }
         axios(options).then(function(result){
             resolve(result.data);
