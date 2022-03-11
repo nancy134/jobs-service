@@ -1,5 +1,7 @@
 const axios = require('axios');
 const utilities = require('./utilities');
+const snsService = require('./sns');
+
 
 exports.getContacts = function(accessToken, query){
     url = process.env.CONSTANT_SERVICE + "/contacts";
@@ -12,23 +14,25 @@ exports.getContacts = function(accessToken, query){
         headers: headers
     }
     axios(options).then(function(result){
+        var toSync = null;
         if (result.data._links && result.data._links.next){
             var href = result.data._links.next.href;
             var parts = href.split("?");
             if (parts.length > 1) queryStr = parts[1];
-            console.log(queryStr);
+
+            toSync = utilities.getCCSyncData(accessToken, result.data.contacts);
+            snsService.syncCCContacts(toSync);
+
             exports.getContacts(accessToken, queryStr);
 
         } else {
-            
-            console.log(result.data);
+            toSync = utilities.getCCSyncData(accessToken, result.data.contacts);
+            snsService.syncCCContacts(toSync);
         }
-
     }).catch(function(err){
         console.log(utilities.processAxiosError(err));
     });
 }
-
 
 exports.getCustomField = function(accessToken){
     return new Promise(function(resolve, reject){
