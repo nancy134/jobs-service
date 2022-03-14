@@ -5,9 +5,9 @@ exports.getContacts = function(accessToken, page){
     var url = process.env.SPARK_SERVICE + "/contacts";
 
     if (page){
-        url += "&_page=" + page;
+        url += "?page=" + page;
     }
-
+    console.log("url: "+url);
     var headers = utilities.createSparkHeaders(accessToken);
     var options = {
         url: url,
@@ -19,10 +19,10 @@ exports.getContacts = function(accessToken, page){
 
         console.log("result.data.D.Pagination.TotalPages: "+result.data.D.Pagination.TotalPages);
         console.log("page: "+page);
-        if (result.data.D.Pagination.TotalPages < page){
+        if (page < result.data.D.Pagination.TotalPages){
             page += 1;
             console.log("get page: "+page)
-            //exports.getContacts(accessToken, page);
+            exports.getContacts(accessToken, page);
         } else {
             ;
         }

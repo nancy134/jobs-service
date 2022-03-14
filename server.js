@@ -94,7 +94,7 @@ app.post('/spark/syncContacts', (req, res) => {
     token = utilities.getToken(req);
     constantService.findOrCreateCustomField(req.body.cc_access_token).then(function(customField){
         var page = 1;
-        sparkService.getContacts(token, null, page);
+        sparkService.getContacts(token, page);
         res.send("sync started");
     }).catch(function(err){
         res.send(err);
