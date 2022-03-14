@@ -44,8 +44,7 @@ exports.getCustomField = function(accessToken){
             headers: headers
         }
         axios(options).then(function(result){
-            //console.log("get customField result.data:");
-            //console.log(result.data);
+
             resolve(result.data);
         }).catch(function(err){
             console.log(err);

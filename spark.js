@@ -2,10 +2,10 @@ const axios = require('axios');
 const utilities = require('./utilities');
 
 exports.getContacts = function(accessToken, page){
-    var url = process.env.SPARK_SERVICE + "/contacts?_pagination=1";
+    var url = process.env.SPARK_SERVICE + "/contacts";
 
     if (page){
-        url += "?page="+page;
+        url += "&_page=" + page;
     }
 
     var headers = utilities.createSparkHeaders(accessToken);
@@ -17,11 +17,17 @@ exports.getContacts = function(accessToken, page){
     axios(options).then(function(result){
         console.log(result.data);
 
+        console.log("result.data.D.Pagination.TotalPages: "+result.data.D.Pagination.TotalPages);
+        console.log("page: "+page);
         if (result.data.D.Pagination.TotalPages < page){
-            exports.getContacts(accessToken, ++page)
+            page += 1;
+            console.log("get page: "+page)
+            //exports.getContacts(accessToken, page);
         } else {
             ;
         }
+
+
     }).catch(function(err){
         console.log(utilities.processAxiosError(err));
     });
