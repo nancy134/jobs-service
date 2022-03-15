@@ -3,11 +3,11 @@ const utilities = require('./utilities');
 const snsService = require('./sns');
 
 
-exports.getContacts = function(accessToken, query){
+exports.getContacts = function(cc_accessToken, spark_accessToken, query){
     url = process.env.CONSTANT_SERVICE + "/contacts";
     if (query) url += "?" + query;
 
-    var headers = utilities.createConstantHeaders(accessToken);
+    var headers = utilities.createConstantHeaders(cc_accessToken);
     var options = {
         url: url,
         method: 'GET',
@@ -20,13 +20,15 @@ exports.getContacts = function(accessToken, query){
             var parts = href.split("?");
             if (parts.length > 1) queryStr = parts[1];
 
-            toSync = utilities.getCCSyncData(accessToken, result.data.contacts);
+            toSync = utilities.getCCSyncData(spark_accessToken, result.data.contacts);
+
             snsService.syncCCContacts(toSync);
 
-            exports.getContacts(accessToken, queryStr);
+            exports.getContacts(cc_accessToken, spark_accessToken, queryStr);
 
         } else {
-            toSync = utilities.getCCSyncData(accessToken, result.data.contacts);
+            toSync = utilities.getCCSyncData(spark_accessToken, result.data.contacts);
+
             snsService.syncCCContacts(toSync);
         }
     }).catch(function(err){

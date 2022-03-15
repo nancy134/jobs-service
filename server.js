@@ -84,7 +84,7 @@ app.post('/cc/syncContacts', (req, res) => {
     var urlParts  = url.parse(req.url);
     var queryStr = urlParts.query;
     token = utilities.getToken(req);
-    constantService.getContacts(token, queryStr);
+    constantService.getContacts(token, req.body.spark_access_token, queryStr);
     res.send("sync started")
 });
 
