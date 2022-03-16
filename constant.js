@@ -14,27 +14,20 @@ exports.getContacts = function(cc_accessToken, spark_accessToken, query){
         headers: headers
     }
     axios(options).then(function(result){
-        var toSync = null;
+        var toSync = utilities.getCCSyncData(spark_accessToken, result.data.contacts);
+        snsService.syncCContacts(toSync);
         if (result.data._links && result.data._links.next){
             var href = result.data._links.next.href;
             var parts = href.split("?");
             if (parts.length > 1) queryStr = parts[1];
-
-            toSync = utilities.getCCSyncData(spark_accessToken, result.data.contacts);
-
-            snsService.syncCCContacts(toSync);
-
             exports.getContacts(cc_accessToken, spark_accessToken, queryStr);
-
-        } else {
-            toSync = utilities.getCCSyncData(spark_accessToken, result.data.contacts);
-
-            snsService.syncCCContacts(toSync);
         }
     }).catch(function(err){
         console.log(utilities.processAxiosError(err));
     });
 }
+
+
 
 exports.getCustomField = function(accessToken){
     return new Promise(function(resolve, reject){
