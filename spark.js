@@ -21,7 +21,8 @@ exports.getContacts = function(spark_accessToken, cc_accessToken, customField, p
         snsService.syncSparkContacts(toSync);
         if (page < result.data.D.Pagination.TotalPages){
             page += 1;
-            exports.getContacts(spark_accessToken, page);
+            exports.getContacts(spark_accessToken, cc_access_token, customField, page);
+
         } else {
             ;
         }

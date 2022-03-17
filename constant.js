@@ -73,11 +73,11 @@ exports.createCustomField = function(accessToken){
 exports.findOrCreateCustomField = function(accessToken){
     return new Promise(function(resolve, reject){
         exports.getCustomField(accessToken).then(function(customField){
-            //console.log(customField);
+            console.log(customField);
             if (customField && customField.name === "flexmls_id"){
                 resolve(customField);
             } else {
-                //console.log("create new custom field");
+                console.log("create new custom field");
                 exports.createCustomField(accessToken).then(function(newCustomField){
                     resolve(newCustomField);
                 }).catch(function(err){
