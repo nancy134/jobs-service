@@ -1,9 +1,10 @@
 const axios = require('axios');
 const utilities = require('./utilities');
 const snsService = require('./sns');
+const syncService = require('./sync');
 
+exports.getContacts = function(accountId, spark_accessToken, cc_accessToken, customField, page){
 
-exports.getContacts = function(spark_accessToken, cc_accessToken, customField, page){
     var url = process.env.SPARK_SERVICE + "/contacts";
 
     if (page){
@@ -21,10 +22,20 @@ exports.getContacts = function(spark_accessToken, cc_accessToken, customField, p
         snsService.syncSparkContacts(toSync);
         if (page < result.data.D.Pagination.TotalPages){
             page += 1;
-            exports.getContacts(spark_accessToken, cc_access_token, customField, page);
+            exports.getContacts(accountId, spark_accessToken, cc_access_token, customField, page);
 
         } else {
-            ;
+            var date = new Date().toISOString();
+            var body = {
+                accountId: accountId,
+                service: "Spark",
+                updateComplete: date
+            }
+            syncService.findAndUpdate(body).then(function(sync){
+                console.log(sync);
+            }).catch(function(err){
+                console.log(err);
+            });
         }
 
 
