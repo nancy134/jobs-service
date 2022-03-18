@@ -99,7 +99,7 @@ app.post('/spark/syncContacts', (req, res) => {
             accountId: system.D.Results[0].Id,
             service: "Spark"
         };
-        syncService.create(body).then(function(sync){
+        syncService.findOrCreate(body).then(function(sync){
             constantService.findOrCreateCustomField(req.body.cc_access_token).then(function(customField){
                 var page = 1;
                 sparkService.getContacts(token, req.body.cc_access_token, customField, page);
