@@ -2,7 +2,7 @@ const models = require("./models");
 
 exports.createSync = function(body){
     return new Promise(function(resolve, reject){
-        models.Sync.findOne({where: body}).then(function(sync){
+        models.Sync.create(body).then(function(sync){
             resolve(sync);
         }).catch(function(err){
             reject(err);
@@ -11,13 +11,12 @@ exports.createSync = function(body){
 }
 
 
-exports.findOrCreate = function(body){
-
+exports.findOrCreateSync = function(body){
     return new Promise(function(resolve, reject){
-        models.Sync.findOne(body).then(function(sync){
+        models.Sync.findOne({where: body}).then(function(sync){
             if (!sync){
-                exports.createSync(body).then(function(sync){
-                    resolve(sync);
+                exports.createSync(body).then(function(sync2){
+                    resolve(sync2);
                 }).catch(function(err){
                     reject(err);
                 });
@@ -50,10 +49,11 @@ exports.updateSync = function(id, body){
 }
 
 
-exports.findAndUpdate = function(body){
+exports.findAndUpdate = function(body, date){
     return new Promise(function(resolve, reject){
-        models.Sync.findOne(body).then(function(sync){
-            if (!sync){
+        models.Sync.findOne({where: body}).then(function(sync){
+            if (sync){
+                body.updateComplete = date; 
                 exports.updateSync(sync.id, body).then(function(sync){
                     resolve(sync);
                 }).catch(function(err){

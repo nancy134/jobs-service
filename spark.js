@@ -10,7 +10,6 @@ exports.getContacts = function(accountId, spark_accessToken, cc_accessToken, cus
     if (page){
         url += "?page=" + page;
     }
-    console.log("url: "+url);
     var headers = utilities.createSparkHeaders(spark_accessToken);
     var options = {
         url: url,
@@ -22,17 +21,16 @@ exports.getContacts = function(accountId, spark_accessToken, cc_accessToken, cus
         snsService.syncSparkContacts(toSync);
         if (page < result.data.D.Pagination.TotalPages){
             page += 1;
-            exports.getContacts(accountId, spark_accessToken, cc_access_token, customField, page);
+            exports.getContacts(accountId, spark_accessToken, cc_accessToken, customField, page);
 
         } else {
             var date = new Date().toISOString();
             var body = {
                 accountId: accountId,
-                service: "Spark",
-                updateComplete: date
+                service: "Spark"
             }
-            syncService.findAndUpdate(body).then(function(sync){
-                console.log(sync);
+            syncService.findAndUpdate(body, date).then(function(sync){
+                ;
             }).catch(function(err){
                 console.log(err);
             });

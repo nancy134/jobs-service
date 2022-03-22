@@ -73,7 +73,6 @@ exports.createCustomField = function(accessToken){
 exports.findOrCreateCustomField = function(accessToken){
     return new Promise(function(resolve, reject){
         exports.getCustomField(accessToken).then(function(customField){
-            console.log(customField);
             if (customField && customField.name === "flexmls_id"){
                 resolve(customField);
             } else {
@@ -96,7 +95,6 @@ exports.syncContacts = function(accessToken, query, data){
     return new Promise(function(resolve, reject){
         url = process.env.JOBS_SERVICE + "/cc/syncContacts";
         if (query) url += "?" + query;
-        console.log(url);
 
         var headers = utilities.createConstantHeaders(accessToken);
         var options = {
