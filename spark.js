@@ -3,13 +3,18 @@ const utilities = require('./utilities');
 const snsService = require('./sns');
 const syncService = require('./sync');
 
-exports.getContacts = function(accountId, spark_accessToken, cc_accessToken, customField, page){
+exports.getContacts = function(accountId, spark_accessToken, cc_accessToken, customField, page, date){
 
     var url = process.env.SPARK_SERVICE + "/contacts";
 
     if (page){
         url += "?page=" + page;
     }
+    if (date){
+        url += "?date=" + date;
+    }
+
+    
     var headers = utilities.createSparkHeaders(spark_accessToken);
     var options = {
         url: url,
@@ -21,7 +26,7 @@ exports.getContacts = function(accountId, spark_accessToken, cc_accessToken, cus
         snsService.syncSparkContacts(toSync);
         if (page < result.data.D.Pagination.TotalPages){
             page += 1;
-            exports.getContacts(accountId, spark_accessToken, cc_accessToken, customField, page);
+            exports.getContacts(accountId, spark_accessToken, cc_accessToken, customField, page, date);
 
         } else {
             var date = new Date().toISOString();
