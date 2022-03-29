@@ -99,9 +99,13 @@ app.post('/spark/syncContacts', (req, res) => {
             service: "Spark"
         };
         syncService.findOrCreateSync(body).then(function(sync){
+            var lastSyncDate = null;
+            if (sync.updateComplete){
+                lastSyncDate = sync.updateComplete.toISOString();
+            }
             constantService.findOrCreateCustomField(req.body.cc_access_token).then(function(customField){
                 var page = 1;
-                sparkService.getContacts(body.accountId, token, req.body.cc_access_token, customField, page, sync.updateComplete);
+                sparkService.getContacts(body.accountId, token, req.body.cc_access_token, customField, page, lastSyncDate);
                 res.send("sync started");
             }).catch(function(err){
                 res.send(err);

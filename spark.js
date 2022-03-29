@@ -5,13 +5,13 @@ const syncService = require('./sync');
 
 exports.getContacts = function(accountId, spark_accessToken, cc_accessToken, customField, page, date){
 
-    var url = process.env.SPARK_SERVICE + "/contacts";
+    var url = process.env.SPARK_SERVICE + "/contacts?";
 
     if (page){
-        url += "?page=" + page;
+        url += "&page=" + page;
     }
     if (date){
-        url += "?date=" + date;
+        url += "&date=" + date;
     }
 
     
@@ -29,12 +29,12 @@ exports.getContacts = function(accountId, spark_accessToken, cc_accessToken, cus
             exports.getContacts(accountId, spark_accessToken, cc_accessToken, customField, page, date);
 
         } else {
-            var date = new Date().toISOString();
+            var dateComplete = new Date().toISOString();
             var body = {
                 accountId: accountId,
                 service: "Spark"
             }
-            syncService.findAndUpdate(body, date).then(function(sync){
+            syncService.findAndUpdate(body, dateComplete).then(function(sync){
                 ;
             }).catch(function(err){
                 console.log(err);
